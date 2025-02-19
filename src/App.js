@@ -25,6 +25,15 @@ function App() {
   const [companies, setCompanies] = useState([]);
   const [companyName, setCompanyName] = useState("");
   const [message, setMessage] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Prompt Suggestions
+  const prompts = [
+    "Apply to top tech companies",
+    "Find remote jobs",
+    "Optimize my resume",
+    "Get AI-based job recommendations",
+  ];
 
   const handleAddCompany = () => {
     if (companyName.trim() !== "") {
@@ -50,9 +59,44 @@ function App() {
     <div style={{ display: "flex" }}>
       <Sidebar />
       <div style={{ flex: 1, padding: "20px", fontFamily: "Arial, sans-serif" }}>
-        <h1>Job Application Automation</h1>
+        <h1 style={{ textAlign: "center" }}>ZvertexAI</h1>
 
-        {/* Search and Input */}
+        {/* Search Box */}
+        <div style={{ marginBottom: "20px", textAlign: "center" }}>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search for jobs, companies, or resume tips..."
+            style={{
+              padding: "10px",
+              width: "80%",
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+            }}
+          />
+        </div>
+
+        {/* Prompt Suggestions */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px", marginBottom: "20px" }}>
+          {prompts.map((prompt, index) => (
+            <button
+              key={index}
+              style={{
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                backgroundColor: "#f8f8f8",
+                cursor: "pointer",
+              }}
+              onClick={() => setSearchQuery(prompt)}
+            >
+              {prompt}
+            </button>
+          ))}
+        </div>
+
+        {/* Company Input */}
         <div style={{ marginBottom: "20px" }}>
           <input
             type="text"
