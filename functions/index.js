@@ -1,3 +1,4 @@
+import { App } from './App'; // If it's a named export
 const functions = require("firebase-functions"); // Import Firebase Functions
 const admin = require("firebase-admin"); // Import Firebase Admin SDK
 const puppeteer = require("puppeteer"); // Import Puppeteer for automation
