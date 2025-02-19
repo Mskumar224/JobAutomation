@@ -1,40 +1,29 @@
-import React, { useState } from "react";
-import './App.css';
+import { App } from './App'; // If it's a named export
+const functions = require("firebase-functions"); // Import Firebase Functions
+const admin = require("firebase-admin"); // Import Firebase Admin SDK
+const puppeteer = require("puppeteer"); // Import Puppeteer for automation
 
-function App() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [prompts, setPrompts] = useState(['Prompt1 as per search', 'Prompt2 as per search', 'Prompt3 as per search']);
+admin.initializeApp(); // Initialize Firebase Admin SDK
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    // Here you would typically handle the search logic
-  };
+// Example: Resume Suggestion Function
+exports.generateResumeSuggestions = functions.https.onRequest((req, res) => {
+    res.json({ suggestions: "Add more keywords, focus on achievements..." });
+});
 
-  return (
-    <div className="app-container">
-      <div className="sidebar">
-        <div className="logo">ZvertexAI</div>
-        <button className="sidebar-button">Upload Resume</button>
-        <button className="sidebar-button">Modify Resume</button>
-        <button className="sidebar-button">Auto Apply</button>
-        <button className="sidebar-button">Recent History</button>
-      </div>
-      <div className="main-content">
-        <input 
-          type="text" 
-          value={searchTerm} 
-          onChange={handleSearch} 
-          placeholder="Search ......" 
-          className="search-bar"
-        />
-        <div className="prompts">
-          {prompts.map((prompt, index) => (
-            <div key={index} className="prompt-card">{prompt}</div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
+// Example: Auto Job Application Bot
+exports.autoApplyJobs = functions.https.onRequest(async (req, res) => {
+    const { resumeUrl, companyNames } = req.body;
 
-export default App;
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+
+    for (let company of companyNames.split(",")) {
+        await page.goto(`https://www.linkedin.com/jobs/search/?keywords=${company}`);
+        await page.waitForTimeout(3000);
+
+        console.log(`Applied to ${company}`);
+    }
+
+    await browser.close();
+    res.json({ message: "Applied to selected companies" });
+});
