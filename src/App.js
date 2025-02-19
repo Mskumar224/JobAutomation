@@ -59,7 +59,10 @@ function App() {
     <div style={{ display: "flex" }}>
       <Sidebar />
       <div style={{ flex: 1, padding: "20px", fontFamily: "Arial, sans-serif" }}>
-        <h1 style={{ textAlign: "center" }}>ZvertexAI</h1>
+      <h1 style={{ textAlign: "center", fontSize: "2rem" }}>
+  <span style={{ color: "blue" }}>Zvertex</span>
+  <span style={{ color: "white", backgroundColor: "blue", padding: "5px 10px", borderRadius: "5px" }}>AI</span>
+</h1>
 
         {/* Search Box */}
         <div style={{ marginBottom: "20px", textAlign: "center" }}>
