@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 const applyJobs = async () => {
   const [companies, setCompanies] = useState([]); // Define state before using
   const response = await fetch("https://us-central1-jobautoapply.cloudfunctions.net/autoApplyJobs", {
