@@ -1,168 +1,86 @@
 import React, { useState } from "react";
-import Sidebar from "./components/Sidebar"; // UI
-import MainContent from "./components/MainContent";
-
-const applyJobs = async (companies) => {
-  try {
-    const response = await fetch(
-      "https://us-central1-jobautoapply.cloudfunctions.net/autoApplyJobs",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ resumeUrl: "resume.pdf", companyNames: companies }),
-      }
-    );
-
-    const result = await response.json();
-    alert(result.message);
-  } catch (error) {
-    console.error("Error applying to jobs:", error);
-    alert("There was an error applying to jobs. Please try again.");
-  }
-};
+import "./App.css";
+import UploadResume from "./components/UploadResume"; // Import the new Upload Resume component
 
 function App() {
-  const [companies, setCompanies] = useState([]);
-  const [companyName, setCompanyName] = useState("");
-  const [message, setMessage] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [resumeURL, setResumeURL] = useState("");
 
-  // Prompt Suggestions
-  const prompts = [
-    "Apply to top tech companies",
-    "Find remote jobs",
-    "Optimize my resume",
-    "Get AI-based job recommendations",
-  ];
-
-  const handleAddCompany = () => {
-    if (companyName.trim() !== "") {
-      setCompanies((prevCompanies) => [...prevCompanies, companyName.trim()]);
-      setCompanyName("");
-    }
-  };
-
-  const handleRemoveCompany = (index) => {
-    setCompanies((prevCompanies) => prevCompanies.filter((_, i) => i !== index));
-  };
-
-  const handleApplyJobs = async () => {
-    if (companies.length === 0) {
-      setMessage("Please add at least one company to apply to.");
-      return;
-    }
-    await applyJobs(companies);
-    setMessage("Job applications sent!");
+  // Function to handle resume upload
+  const handleResumeUpload = (url) => {
+    setResumeURL(url);
   };
 
   return (
-    <div style={{ display: "flex" }}>
-      <Sidebar />
-      <div style={{ flex: 1, padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h1 style={{ textAlign: "center", fontSize: "2rem" }}>
-  <span style={{ color: "blue" }}>Zvertex</span>
-  <span style={{ color: "white", backgroundColor: "blue", padding: "5px 10px", borderRadius: "5px" }}>AI</span>
-</h1>
-
-        {/* Search Box */}
-        <div style={{ marginBottom: "20px", textAlign: "center" }}>
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search for jobs, companies, or resume tips..."
-            style={{
-              padding: "10px",
-              width: "80%",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-            }}
-          />
-        </div>
-
-        {/* Prompt Suggestions */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px", marginBottom: "20px" }}>
-          {prompts.map((prompt, index) => (
-            <button
-              key={index}
-              style={{
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                backgroundColor: "#f8f8f8",
-                cursor: "pointer",
-              }}
-              onClick={() => setSearchQuery(prompt)}
-            >
-              {prompt}
-            </button>
-          ))}
-        </div>
-
-        {/* Company Input */}
-        <div style={{ marginBottom: "20px" }}>
-          <input
-            type="text"
-            value={companyName}
-            onChange={(e) => setCompanyName(e.target.value)}
-            placeholder="Enter Company Name"
-            style={{ padding: "10px", marginRight: "10px", width: "70%" }}
-          />
-          <button onClick={handleAddCompany} style={{ padding: "10px" }}>Add</button>
-        </div>
-
-        {/* Company List */}
-        <div
+    <div className="app-container" style={{ textAlign: "center", padding: "20px" }}>
+      {/* Header with Search Box */}
+      <header className="header">
+        <h1 style={{ color: "#2196F3" }}>
+          Zvertex<span style={{ color: "#000000" }}>AI</span>
+        </h1>
+        <input
+          type="text"
+          placeholder="Search for jobs..."
+          className="search-box"
           style={{
-            marginBottom: "20px",
-            maxHeight: "200px",
-            overflowY: "auto",
+            width: "60%",
+            padding: "10px",
+            marginTop: "10px",
+            borderRadius: "5px",
             border: "1px solid #ccc",
-            padding: "10px",
           }}
-        >
-          {companies.map((company, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "5px",
-              }}
-            >
-              <span>{company}</span>
-              <button
-                onClick={() => handleRemoveCompany(index)}
-                style={{ background: "none", border: "none", color: "red", cursor: "pointer" }}
-              >
-                X
-              </button>
-            </div>
-          ))}
-        </div>
+        />
+      </header>
 
-        {/* Apply Button */}
-        <button
-          onClick={handleApplyJobs}
-          style={{
-            padding: "10px",
-            width: "100%",
-            backgroundColor: "#4CAF50",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          Apply to Jobs
-        </button>
-
-        {message && (
-          <p style={{ marginTop: "20px", color: message.includes("error") ? "red" : "green" }}>
-            {message}
-          </p>
-        )}
+      {/* Prompt Suggestions */}
+      <div className="prompt-container" style={{ marginTop: "20px" }}>
+        <button className="prompt-button">Best IT Jobs</button>
+        <button className="prompt-button">Startup Openings</button>
+        <button className="prompt-button">Remote Jobs</button>
+        <button className="prompt-button">AI Industry Hiring</button>
       </div>
+
+      {/* Upload Resume Section */}
+      <UploadResume onResumeUpload={handleResumeUpload} />
+
+      {/* Resume Preview */}
+      {resumeURL && (
+        <div className="resume-preview">
+          <h3>Preview Your Resume</h3>
+          <iframe
+            src={resumeURL}
+            title="Resume Preview"
+            style={{ width: "80%", height: "400px", border: "1px solid #ccc" }}
+          />
+        </div>
+      )}
+
+      {/* Select Companies Dropdown */}
+      <div className="company-selection" style={{ marginTop: "20px" }}>
+        <h3>Select Companies to Apply</h3>
+        <select className="company-dropdown">
+          <option value="">Choose a company</option>
+          <option value="Google">Google</option>
+          <option value="Amazon">Amazon</option>
+          <option value="Microsoft">Microsoft</option>
+          <option value="Tesla">Tesla</option>
+        </select>
+      </div>
+
+      {/* Auto-Apply Button */}
+      <button
+        className="apply-button"
+        style={{
+          padding: "10px 20px",
+          marginTop: "20px",
+          backgroundColor: "#2196F3",
+          color: "white",
+          border: "none",
+          cursor: "pointer",
+        }}
+        onClick={() => alert("Auto Apply activated!")}
+      >
+        Auto Apply Now
+      </button>
     </div>
   );
 }
